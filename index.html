@@ -2,44 +2,103 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Radio Penyiar</title>
+<title>Radio Penyiar Dashboard</title>
 <style>
 body{
-background:#0f172a;
-color:white;
+background:#08142b;
 font-family:Arial;
+margin:0;
+color:white;
 text-align:center;
 }
 .container{
-margin-top:50px;
+padding-top:30px;
 }
 .card{
-width:400px;
+width:800px;
 margin:auto;
-background:#1e293b;
-padding:20px;
-border-radius:15px;
-box-shadow:0px 0px 20px #000;
+background:#18253d;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 25px rgba(0,0,0,0.5);
 }
-.nilai{
-font-size:70px;
+h1{
+margin-top:0;
+}
+.gauge{
+width:220px;
+height:220px;
+margin:auto;
+border-radius:50%;
+background:
+conic-gradient(#00ff88 0deg,
+#00ff88 300deg,
+#2d3748 300deg,
+#2d3748 360deg);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.gauge-inner{
+width:160px;
+height:160px;
+border-radius:50%;
+background:#18253d;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:50px;
+font-weight:bold;
 color:#00ff88;
+}
+.stats{
+display:flex;
+justify-content:space-around;
+margin-top:20px;
+}
+.stat{
+background:#24324b;
+padding:15px;
+border-radius:10px;
+width:140px;
+}
+.label{
+font-size:14px;
+color:#999;
+}
+.value{
+font-size:28px;
 font-weight:bold;
 }
-.progress{
-height:25px;
-background:#333;
-border-radius:25px;
-overflow:hidden;
+.history{
+margin-top:30px;
+}
+.bararea{
+display:flex;
+justify-content:center;
+align-items:flex-end;
+gap:8px;
+height:140px;
 }
 .bar{
-height:100%;
 background:#00ff88;
-width:0%;
+width:40px;
+border-radius:6px 6px 0 0;
+}
+button{
+margin-top:25px;
+padding:12px 20px;
+font-size:16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#00ff88;
+font-weight:bold;
 }
 .online{
 color:#00ff88;
 font-weight:bold;
+margin-bottom:15px;
 }
 </style>
 </head>
@@ -47,33 +106,65 @@ font-weight:bold;
 <div class="container">
 <div class="card">
 <h1>RADIO PENYIAR</h1>
-<p class="online">
+<div class="online">
 ● ONLINE
-</p>
-<div id="nilai" class="nilai">
+</div>
+<div class="gauge">
+<div class="gauge-inner" id="nilai">
 0%
 </div>
-<div class="progress">
-<div id="bar" class="bar"></div>
 </div>
-<br>
-<div id="jam"></div>
+<div class="stats">
+<div class="stat">
+<div class="label">MIN</div>
+<div id="min" class="value">0</div>
+</div>
+<div class="stat">
+<div class="label">AVG</div>
+<div id="avg" class="value">0</div>
+</div>
+<div class="stat">
+<div class="label">MAX</div>
+<div id="max" class="value">0</div>
+</div>
+</div>
+<div class="history">
+<h3>Riwayat Pengukuran</h3>
+<div id="bars" class="bararea"></div>
+</div>
+<button onclick="location.reload()">
+Refresh Data
+</button>
+<p id="jam"></p>
 </div>
 </div>
 <script>
 function updateJam(){
-const sekarang = new Date();
 document.getElementById("jam").innerHTML =
-sekarang.toLocaleString();
+new Date().toLocaleString();
 }
 setInterval(updateJam,1000);
 fetch("data.json")
 .then(r=>r.json())
 .then(data=>{
 document.getElementById("nilai").innerHTML =
-data.nilai;
-document.getElementById("bar").style.width =
-data.nilai;
+data.nilai + "%";
+document.getElementById("min").innerHTML =
+data.min + "%";
+document.getElementById("avg").innerHTML =
+data.avg + "%";
+document.getElementById("max").innerHTML =
+data.max + "%";
+const bars =
+document.getElementById("bars");
+data.history.forEach(v=>{
+const div =
+document.createElement("div");
+div.className="bar";
+div.style.height =
+v + "px";
+bars.appendChild(div);
+});
 });
 </script>
 </body>

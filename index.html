@@ -1,17 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Radio Penyiar</title>
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+.container{
+margin-top:50px;
+}
+.card{
+width:400px;
+margin:auto;
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+box-shadow:0px 0px 20px #000;
+}
+.nilai{
+font-size:70px;
+color:#00ff88;
+font-weight:bold;
+}
+.progress{
+height:25px;
+background:#333;
+border-radius:25px;
+overflow:hidden;
+}
+.bar{
+height:100%;
+background:#00ff88;
+width:0%;
+}
+.online{
+color:#00ff88;
+font-weight:bold;
+}
+</style>
 </head>
 <body>
-<h1>Dashboard Radio Penyiar</h1>
-<h2>Status Pengukuran</h2>
-<h1 id="nilai">0%</h1>
+<div class="container">
+<div class="card">
+<h1>RADIO PENYIAR</h1>
+<p class="online">
+● ONLINE
+</p>
+<div id="nilai" class="nilai">
+0%
+</div>
+<div class="progress">
+<div id="bar" class="bar"></div>
+</div>
+<br>
+<div id="jam"></div>
+</div>
+</div>
 <script>
+function updateJam(){
+const sekarang = new Date();
+document.getElementById("jam").innerHTML =
+sekarang.toLocaleString();
+}
+setInterval(updateJam,1000);
 fetch("data.json")
-.then(response => response.json())
-.then(data => {
-document.getElementById("nilai").innerText = data.nilai;
+.then(r=>r.json())
+.then(data=>{
+document.getElementById("nilai").innerHTML =
+data.nilai;
+document.getElementById("bar").style.width =
+data.nilai;
 });
 </script>
 </body>

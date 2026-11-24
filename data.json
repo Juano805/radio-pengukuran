@@ -1,7 +1,10 @@
 {
-  "nilai": 97,
+  "nilai": 98,
   "min": 82,
   "avg": 91,
   "max": 98,
-  "history": [82,85,88,90,92,95,97]
+  "frequency": "107.5 FM",
+  "listeners": 2145,
+  "uptime": "99.98%",
+  "history": [82,85,88,90,92,95,98]
 }

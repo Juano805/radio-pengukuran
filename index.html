@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Radio Penyiar Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 body{
 background:#08142b;
@@ -31,10 +32,12 @@ height:220px;
 margin:auto;
 border-radius:50%;
 background:
-conic-gradient(#00ff88 0deg,
+conic-gradient(
+#00ff88 0deg,
 #00ff88 300deg,
 #2d3748 300deg,
-#2d3748 360deg);
+#2d3748 360deg
+);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -55,6 +58,8 @@ color:#00ff88;
 display:flex;
 justify-content:space-around;
 margin-top:20px;
+gap:10px;
+flex-wrap:wrap;
 }
 .stat{
 background:#24324b;
@@ -95,10 +100,23 @@ cursor:pointer;
 background:#00ff88;
 font-weight:bold;
 }
+
 .online{
 color:#00ff88;
 font-weight:bold;
 margin-bottom:15px;
+}
+#quality{
+font-size:22px;
+font-weight:bold;
+margin-bottom:20px;
+color:#00ff88;
+}
+canvas{
+margin-top:20px;
+background:white;
+border-radius:10px;
+padding:10px;
 }
 </style>
 </head>
@@ -109,11 +127,15 @@ margin-bottom:15px;
 <div class="online">
 ● ONLINE
 </div>
+<div id="quality">
+-
+</div>
 <div class="gauge">
 <div class="gauge-inner" id="nilai">
 0%
 </div>
 </div>
+<!-- MIN AVG MAX -->
 <div class="stats">
 <div class="stat">
 <div class="label">MIN</div>
@@ -128,9 +150,24 @@ margin-bottom:15px;
 <div id="max" class="value">0</div>
 </div>
 </div>
+<!-- FREQUENCY LISTENERS UPTIME -->
+<div class="stats">
+<div class="stat">
+<div class="label">FREQUENCY</div>
+<div id="frequency" class="value">-</div>
+</div>
+<div class="stat">
+<div class="label">LISTENERS</div>
+<div id="listeners" class="value">-</div>
+</div>
+<div class="stat">
+<div class="label">UPTIME</div>
+<div id="uptime" class="value">-</div>
+</div>
+</div>
 <div class="history">
-<h3>Riwayat Pengukuran</h3>
-<div id="bars" class="bararea"></div>
+<h3>Grafik Historis</h3>
+<canvas id="chart"></canvas>
 </div>
 <button onclick="location.reload()">
 Refresh Data
@@ -145,8 +182,8 @@ new Date().toLocaleString();
 }
 setInterval(updateJam,1000);
 fetch("data.json")
-.then(r=>r.json())
-.then(data=>{
+.then(r => r.json())
+.then(data => {
 document.getElementById("nilai").innerHTML =
 data.nilai + "%";
 document.getElementById("min").innerHTML =
@@ -155,15 +192,37 @@ document.getElementById("avg").innerHTML =
 data.avg + "%";
 document.getElementById("max").innerHTML =
 data.max + "%";
-const bars =
-document.getElementById("bars");
-data.history.forEach(v=>{
-const div =
-document.createElement("div");
-div.className="bar";
-div.style.height =
-v + "px";
-bars.appendChild(div);
+document.getElementById("frequency").innerHTML =
+data.frequency;
+document.getElementById("listeners").innerHTML =
+data.listeners;
+document.getElementById("uptime").innerHTML =
+data.uptime;
+let status = "LEMAH";
+if(data.nilai >= 90){
+status = "SANGAT BAIK";
+}
+else if(data.nilai >= 80){
+status = "BAIK";
+}
+document.getElementById("quality").innerHTML =
+status;
+new Chart
+(ument.getElementById("chart"),
+{
+type:"line",
+data:{
+labels:[
+"1","2","3","4","5","6","7"
+],
+datasets:[{
+label:"Pengukuran",
+data:data.history,
+borderColor:"#00ff88",
+backgroundColor:"#00ff88",
+fill:false
+}]
+}
 });
 });
 </script>

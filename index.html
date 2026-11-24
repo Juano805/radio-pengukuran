@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Radio Penyiar</title>
+</head>
+<body>
+<h1>Dashboard Radio Penyiar</h1>
+<h2>Status Pengukuran</h2>
+<h1 id="nilai">0%</h1>
+<script>
+fetch("data.json")
+.then(response => response.json())
+.then(data => {
+document.getElementById("nilai").innerText = data.nilai;
+});
+</script>
+</body>
+</html>
